@@ -1,7 +1,6 @@
 defmodule Skeleton.Phoenix.LiveView do
-  import Phoenix.LiveView.Socket
   alias Skeleton.PhoenixLiveView.Config, as: LiveViewConfig
-  alias Skeleton.Permission.Config, as: LiveViewConfig
+  alias Skeleton.Permission.Config, as: PermConfig
 
   # Callbacks
 
@@ -93,12 +92,12 @@ defmodule Skeleton.Phoenix.LiveView do
   # Do build context
 
   def build_permission_context(socket, ctx_fun) do
-    ctx_fun.(socket, LiveViewConfig.permission().context(socket))
+    ctx_fun.(socket, PermConfig.permission().context(socket))
   end
 
   # Return unauthorized
 
-  def unauthorized(socket) do
+  def unauthorized(_socket) do
     {:error, :unauthorized}
   end
 
