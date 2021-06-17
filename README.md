@@ -9,7 +9,7 @@ O Skeleton Phoenix Live View é um facilitador para criação de live em sua apl
 
 def deps do
   [
-    {:skeleton_phoenix_live_view, "~> 1.0.0"}
+    {:skeleton_phoenix_live_view, "~> 1.0.1"}
   ]
 end
 ```
