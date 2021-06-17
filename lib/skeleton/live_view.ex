@@ -1,8 +1,8 @@
 defmodule Skeleton.Phoenix.LiveView do
   # Callbacks
 
-  @callback is_authenticated(Plug.Socket.t) :: Boolean.t
-  @callback fallback(Plug.Conn.t()) :: Plug.Conn.t()
+  @callback is_authenticated(Phoenix.LiveView.Socket.t()) :: Boolean.t()
+  @callback fallback(Phoenix.LiveView.Socket.t(), any) :: Phoenix.LiveView.Socket.t()
 
   defmacro __using__(opts) do
     alias Skeleton.Phoenix.LiveView
@@ -18,7 +18,9 @@ defmodule Skeleton.Phoenix.LiveView do
       # Ensure not authenticated
 
       def ensure_not_authenticated({:error, socket, error}), do: {:error, socket, error}
-      def ensure_not_authenticated(socket), do: LiveView.do_ensure_not_authenticated(@live_view, socket)
+
+      def ensure_not_authenticated(socket),
+        do: LiveView.do_ensure_not_authenticated(@live_view, socket)
 
       # Resolve
 
