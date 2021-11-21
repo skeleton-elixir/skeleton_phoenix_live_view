@@ -1,4 +1,6 @@
 defmodule Skeleton.Phoenix.LiveView do
+  import Phoenix.LiveView
+
   # Callbacks
 
   @callback is_authenticated(Phoenix.LiveView.Socket.t()) :: Boolean.t()
@@ -22,10 +24,31 @@ defmodule Skeleton.Phoenix.LiveView do
       def ensure_not_authenticated(socket),
         do: LiveView.do_ensure_not_authenticated(@live_view, socket)
 
+      # Assign value
+
+      def assign_value(value, %Phoenix.LiveView.Socket{} = socket, key),
+        do: assign(socket, key, value)
+
+      # Step
+
+      def step({:error, socket, error}, _), do: {:error, socket, error}
+      def step(socket, callback), do: callback.(socket)
+
+      def step({:error, socket, error}, :connected, _callback), do: {:error, socket, error}
+
+      def step(socket, :connected, callback),
+        do: LiveView.step(:connected, socket, callback)
+
+      def step({:error, socket, error}, :disconnected, _callback), do: {:error, socket, error}
+
+      def step(socket, :disconnected, callback),
+        do: LiveView.step(:disconnected, socket, callback)
+
       # Resolve
 
-      def resolve({:error, socket, error}, _), do: @live_view.fallback(socket, error)
-      def resolve(socket, callback), do: callback.(socket)
+      def resolve({:error, socket, error}), do: @live_view.fallback(socket, error)
+      def resolve(socket, callback), do: LiveView.resolve(socket, callback)
+      def resolve(socket), do: {:ok, socket}
     end
   end
 
@@ -33,7 +56,7 @@ defmodule Skeleton.Phoenix.LiveView do
 
   def do_ensure_authenticated(live_view, socket) do
     if live_view.is_authenticated(socket) do
-      success(socket)
+      socket
     else
       unauthorized(socket)
     end
@@ -45,7 +68,7 @@ defmodule Skeleton.Phoenix.LiveView do
     if live_view.is_authenticated(socket) do
       unauthorized(socket)
     else
-      success(socket)
+      socket
     end
   end
 
@@ -55,9 +78,31 @@ defmodule Skeleton.Phoenix.LiveView do
     {:error, socket, :unauthorized}
   end
 
-  # Retorn success
+  # Step
 
-  def success(socket) do
-    socket
+  def step(:connected, socket, callback) do
+    if connected?(socket) do
+      callback.(socket)
+    else
+      socket
+    end
+  end
+
+  def step(:disconnected, socket, callback) do
+    if connected?(socket) do
+      socket
+    else
+      callback.(socket)
+    end
+  end
+
+  # Resolve
+
+  def resolve(socket, callback) do
+    if connected?(socket) do
+      {:ok, callback.(socket)}
+    else
+      {:ok, socket}
+    end
   end
 end

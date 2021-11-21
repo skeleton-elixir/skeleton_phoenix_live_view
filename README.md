@@ -27,6 +27,8 @@ defmodule AppWeb.LiveView do
   end
 
   def is_authenticated(socket), do: socket.assigns[:current_user]
+
+  def fallback(socket), do: socket
 end
 ```
 
