@@ -44,6 +44,16 @@ defmodule Skeleton.Phoenix.LiveView do
       def step(socket, :disconnected, callback),
         do: LiveView.step(:disconnected, socket, callback)
 
+      # Ok
+
+      def ok({:error, socket, error}), do: @live_view.fallback(socket, error)
+
+      def ok(socket), do: {:ok, socket}
+
+      # Noreply
+
+      def noreply(socket), do: {:noreply, socket}
+
       # Resolve
 
       def resolve({:error, socket, error}), do: @live_view.fallback(socket, error)
