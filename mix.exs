@@ -41,7 +41,7 @@ defmodule SkeletonPhoenixLiveView.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:phoenix_live_view, "~> 0.18.3"},
+      {:phoenix_live_view, ">= 0.17.0"},
       {:floki, ">= 0.34.0", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:credo, "~> 1.6.0", only: [:dev, :test], runtime: false},
