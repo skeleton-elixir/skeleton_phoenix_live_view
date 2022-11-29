@@ -58,7 +58,7 @@ defmodule Skeleton.Phoenix.LiveView do
 
       def resolve({:error, socket, error}), do: @live_view.fallback(socket, error)
       def resolve(socket, callback), do: LiveView.resolve(socket, callback)
-      def resolve(socket), do: {:ok, socket}
+      def resolve(socket), do: socket
     end
   end
 
@@ -110,9 +110,9 @@ defmodule Skeleton.Phoenix.LiveView do
 
   def resolve(socket, callback) do
     if connected?(socket) do
-      {:ok, callback.(socket)}
+      callback.(socket)
     else
-      {:ok, socket}
+      socket
     end
   end
 end
