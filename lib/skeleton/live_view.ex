@@ -32,34 +32,36 @@ defmodule Skeleton.Phoenix.LiveView do
       # Step
 
       def step({:error, socket, error}, _), do: {:error, socket, error}
+      def step({:skip, socket}, _callback), do: {:skip, socket}
       def step(socket, callback), do: callback.(socket)
 
       def step({:error, socket, error}, :connected, _callback), do: {:error, socket, error}
-
-      def step(socket, :connected, callback),
-        do: LiveView.step(:connected, socket, callback)
+      def step({:skip, socket}, :connected, _callback), do: {:skip, socket}
+      def step(socket, :connected, callback), do: LiveView.step(:connected, socket, callback)
 
       def step({:error, socket, error}, :disconnected, _callback), do: {:error, socket, error}
-
-      def step(socket, :disconnected, callback),
-        do: LiveView.step(:disconnected, socket, callback)
+      def step({:skip, socket}, :disconnected, _callback), do: {:skip, socket}
+      def step(socket, :disconnected, callback), do: LiveView.step(:disconnected, socket, callback)
 
       # Ok
 
       def ok({:error, socket, error}), do: {:ok, @live_view.fallback(socket, error)}
-
+      def ok({:skip, socket}), do: {:ok, socket}
       def ok(socket), do: {:ok, socket}
 
       # Noreply
 
+      def noreply({:skip, socket}), do: {:noreply, socket}
       def noreply(socket), do: {:noreply, socket}
 
       # Resolve
 
       def resolve({:error, socket, error}), do: @live_view.fallback(socket, error)
+      def resolve({:skip, socket}), do: socket
       def resolve(socket), do: socket
 
       def resolve({:error, socket, error}, _), do: @live_view.fallback(socket, error)
+      def resolve({:skip, socket}, _callback), do: socket
       def resolve(socket, callback), do: LiveView.resolve(socket, callback)
     end
   end
