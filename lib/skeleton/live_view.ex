@@ -51,6 +51,7 @@ defmodule Skeleton.Phoenix.LiveView do
 
       # Noreply
 
+      def noreply({:error, socket, error}), do: {:noreply, @live_view.fallback(socket, error)}
       def noreply({:skip, socket}), do: {:noreply, socket}
       def noreply(socket), do: {:noreply, socket}
 
